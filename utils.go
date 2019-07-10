@@ -2,8 +2,11 @@ package dcrlibwallet
 
 import (
 	"context"
+	"math"
 	"os"
 	"os/signal"
+
+	"github.com/decred/dcrd/dcrutil"
 )
 
 func shutdownListener() {
@@ -39,4 +42,21 @@ func contextWithShutdownCancel(ctx context.Context) (context.Context, context.Ca
 		cancel()
 	}()
 	return ctx, cancel
+}
+
+func AmountCoin(amount int64) float64 {
+	return dcrutil.Amount(amount).ToCoin()
+}
+
+func AmountAtom(f float64) int64 {
+	amount, err := dcrutil.NewAmount(f)
+	if err != nil {
+		log.Error(err)
+		return -1
+	}
+	return int64(amount)
+}
+
+func roundUp(n float64) int32 {
+	return int32(math.Round(n))
 }
